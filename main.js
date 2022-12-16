@@ -48,7 +48,7 @@ class ScoreBoard {
 class Results {
     constructor() {
         console.log(1);
-        fetch('http://jsonblob.com/1050366298407845888', {
+        fetch('https://jsonblob.com/1050366298407845888', {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
