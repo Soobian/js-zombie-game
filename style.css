@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+
+* {
+    margin:0;
+    padding: 0;
+}
+
+.scoreboard {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-50%);
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-family: 'Rye', cursive;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 20px;
+    text-align: center;
+}
+
+.plansza {
+    height: 100vh;
+    background: #aaa;
+    overflow: hidden;
+    position: relative;
+    cursor: crosshair;
+}
+
+.zombie {
+    cursor: crosshair;
+    width: 200px;
+    height: 312px;
+    background: url(../walkingdead.png);
+    position: absolute;
+    left: 110%;
+    bottom: 100px; /*maks 360 */
+    animation: zombieAnim 0.5s 0s infinite steps(9),
+                zombieWalk 10s 0s 1 linear;
+
+}
+
+@keyframes zombieAnim {
+    100% {
+        background-position: -1800px 0;
+    }
+}
+
+@keyframes zombieWalk {
+    100% {
+        left: -300px;
+    }
+}
