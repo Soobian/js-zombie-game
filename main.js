@@ -22,6 +22,7 @@ class ScoreBoard {
         this.lives = 3;
         this.nickname = nickname;
         this.container = document.createElement('div');
+        this.container.style.display = 'none';
         this.container.classList.add('scoreboard');
         this.nickContainer = document.createElement('p');
         this.scoreContainer = document.createElement('p');
@@ -47,8 +48,14 @@ class ScoreBoard {
 
 class Results {
     constructor() {
-        console.log(1);
-        fetch('https://jsonblob.com/1050366298407845888', {
+        this.container = document.createElement('div');
+        this.container.classList.add('resultsboard');
+        this.data = [];
+        this.dataURL = 'https://jsonblob.com/api/jsonBlob/1050366298407845888'
+    }
+
+    async getResults() {
+        const response = await fetch(this.dataURL, {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -57,15 +64,50 @@ class Results {
                 },
             }
         )
-        .then((response) => response.json())
-        .then((data => console.log(data)));
-        this.container = document.createElement('div');
-        this.container.classList.add('resultsboard');
+
+        const data = await response.json();
+
+        this.data = data.results;
+        this.data.forEach(result => {
+            var resultContainer = document.createElement('div');
+            var playersName = document.createElement('p');
+            playersName.innerHTML = result.nickname;
+            var playersScore = document.createElement('p');
+            playersScore.innerHTML = result.points + " points";
+            resultContainer.appendChild(playersName);
+            resultContainer.appendChild(playersScore);
+            this.container.appendChild(resultContainer);
+        })
+        this.sendResults(this.data[0]);
+    }
+
+    async sendResults(result) {
+        this.data.push(result);
+        this.data.sort((a, b) => b.points - a.points);
+        console.log(this.data.slice(0, 7));
+        const response = await fetch("https://jsonblob.com/api/jsonBlob/", {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': 'https:://jsonblob.com',
+                'Access-Control-Allow-Methods': 'POST, PUT, DELETE, HEAD, PATCH, OPTIONS',
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                "results": this.data.slice(0, 7),
+            })
+        });
+        this.dataURL = response.headers.get('Location');        
     }
 
     showResults() {
-        
-    }
+        this.container.style.display = 'auto';
+    };
+
+    hideResults() {
+        this.container.style.display = 'none';
+    };
 }
 
 class Board {
@@ -87,6 +129,7 @@ class Game {
         this.results = new Results();
         this.scoreBoard = new ScoreBoard("Sobjan");
         this.board.container.appendChild(this.scoreBoard.container);
+        this.board.container.appendChild(this.results.container);
         this.board.container.addEventListener("click", this.shot.bind(this), false)
     }
 
@@ -118,11 +161,10 @@ class Game {
     }
 
     getResults() {
-        
+        this.results.getResults();
     }
 
     startGame() {
-        this.getResults();
         var play = setInterval(() => {
             var zombie = new Zombie(
                 0.5 + Math.random() * 1,
@@ -140,4 +182,4 @@ class Game {
     }
 }
 
-document.addEventListener('DOMContentLoaded', new Game());
+document.addEventListener('DOMContentLoaded', new Game().getResults());

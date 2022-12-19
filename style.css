@@ -21,6 +21,28 @@
     text-align: center;
 }
 
+.resultsboard {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-50%);
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-family: 'Rye', cursive;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 20px;
+    text-align: center;
+}
+
+.resultsboard > div {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 .plansza {
     height: 100vh;
     background: #aaa;
